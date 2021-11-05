@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 from torch.utils import cpp_extension
 import sys
 
@@ -30,7 +30,7 @@ cmdclass={}
 
 setup(
     name="lightconvpoint",
-    package_dir={'lightconvpoint': 'lightconvpoint'},
+    packages=find_packages(),
     ext_modules=ext_modules,
     cmdclass=cmdclass,
 )

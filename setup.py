@@ -30,6 +30,7 @@ cmdclass={}
 
 setup(
     name="lightconvpoint",
+    packages=['lightconvpoint'],
     ext_modules=ext_modules,
     cmdclass=cmdclass,
 )

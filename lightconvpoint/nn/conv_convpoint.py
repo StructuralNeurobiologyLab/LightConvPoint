@@ -43,9 +43,10 @@ class ConvPoint(nn.Module):
             The support points. If they were provided as an input, return the same tensor.
     """
 
-    def __init__(self, in_channels, out_channels, kernel_size, bias=True, dim=3, kernel_separation=False, **kwargs):
+    def __init__(self, in_channels, out_channels, kernel_size, bias=True, dim=3, kernel_separation=False,
+                 normalize_pts=True, **kwargs):
         super().__init__()
-
+        self.normalize_pts = normalize_pts
         # parameters
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -96,7 +97,8 @@ class ConvPoint(nn.Module):
         pts = points - support_points.unsqueeze(3)
 
         # normalize points
-        pts = self.normalize_points(pts)
+        if self.normalize_pts:
+            pts = self.normalize_points(pts)
 
         # project features on kernel points
         pts = (pts.permute(0, 2, 3, 1).unsqueeze(4) - self.centers).contiguous()

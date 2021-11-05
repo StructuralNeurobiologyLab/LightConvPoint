@@ -95,5 +95,4 @@ class SearchQuantized:
         if self.dilation > 1:
             indices = indices[:,:, torch.randperm(indices.size(2))]
             indices = indices[:,:,:self.K]
-
         return indices, support_points

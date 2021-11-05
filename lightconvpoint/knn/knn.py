@@ -1,5 +1,6 @@
 import torch
 from torch_geometric.nn.pool import knn as tc_knn
+import numpy as np
 
 import importlib
 knn_c_func_spec = importlib.util.find_spec('lightconvpoint.knn_c_func')
@@ -25,10 +26,11 @@ def knn(points: torch.Tensor, queries: torch.Tensor, K: int):
 
     x = points.transpose(1,2).reshape(-1, dim)
     y = queries.transpose(1,2).reshape(-1, dim)
-    batch_x = batch_x.view(-1)
-    batch_y = batch_y.view(-1)
+    batch_x = batch_x.contiguous().view(-1)
+    batch_y = batch_y.contiguous().view(-1)
 
     indices = tc_knn(x,y,K,batch_x=batch_x, batch_y=batch_y)
     indices = indices[1]
-    return indices.view(bs,ny,K)
+    ix_offset = torch.tensor(np.arange(0, bs)*nx).repeat((K, ny, 1)).transpose(2, 0).to(device=points.device)
+    return indices.view(bs,ny,K) - ix_offset
 
